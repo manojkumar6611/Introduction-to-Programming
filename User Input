@@ -8,4 +8,4 @@ while true:
           break
     else:
          print("Invalid command. Type 'help' for available commands.")
-main()
+main() 
