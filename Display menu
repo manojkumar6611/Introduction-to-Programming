@@ -1,2 +1,5 @@
 def display_menu():
     print("menu:")
+    print("a. print help menu")
+    print("b. Exit the program")
+display_menu()
