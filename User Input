@@ -1,1 +1,11 @@
-
+det mail()
+while true:
+    user_input = input ("Wildlife> ").strip().lower()
+    if user_input == 'help':
+          display_menu()
+    elif user_input == 'exit':
+          print("Exiting the program.")
+          break
+    else:
+         print("Invalid command. Type 'help' for available commands.")
+main()
