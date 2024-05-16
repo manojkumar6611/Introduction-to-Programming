@@ -1,3 +1,11 @@
+##def display_menu():
+    
+    ##print("Help")
+    ##print("====")
+    ##print("The following commands are recognized:")
+    ##print("a. Display help")
+    ##print("b. Exit the program")
+##display_menu()
 def display_menu():
     """Display the help menu."""
     print("Welcome to the Wildlife Tracker!")
@@ -102,6 +110,37 @@ radius = 100000
 species_list = get_species_list(coordinate, radius)
 print("Species List:", species_list)
 import requests
+import time
+
+def gps_coordinate(city):
+    url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json"
+    
+    for _ in range(3):  # Retry up to 3 times
+        response = requests.get(url)
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                if data:
+                    return {"latitude": float(data[0]["lat"]), "longitude": float(data[0]["lon"])}
+                else:
+                    print("Error: Empty response from API")
+            except json.decoder.JSONDecodeError:
+                print("Error: Unable to decode JSON response")
+        else:
+            print("Error: API request failed with status code", response.status_code)
+        
+        # Wait before retrying
+        time.sleep(2)
+    
+    print("Error: Maximum retries exceeded")
+    return None
+
+# Test the function
+city = "Cairns"
+coordinates = gps_coordinate(city)
+print("GPS coordinates for", city + ":", coordinates)
+
+import requests
 
 def get_surveys_by_species(coordinate, radius, taxonid):
     url = f"https://apps.des.qld.gov.au/species/?op=getsurveysbyspecies&taxonid={taxonid}&circle={coordinate['latitude']},{coordinate['longitude']},{radius}"
@@ -122,6 +161,18 @@ sightings = [
     {"properties": {"StartDate": "2022-04-15", "LocalityDetails": "Location B"}},
     {"properties": {"StartDate": "2022-06-20", "LocalityDetails": "Location C"}}
 ]
+def earliest(sightings):
+    # Initialize earliest sighting with a placeholder value
+    earliest_sighting = None
+    
+    # Iterate through the sightings to find the earliest sighting
+    for sighting in sightings:
+        start_date = sighting["properties"]["StartDate"]
+        if earliest_sighting is None or start_date < earliest_sighting:
+            earliest_sighting = start_date
+    
+    return earliest_sighting
+
 
 # Call earliest function
 earliest_sighting = earliest(sightings)
@@ -129,3 +180,4 @@ print("Earliest Sighting:", earliest_sighting)
 
 # Call display_sightings function
 display_sightings(sightings)
+
