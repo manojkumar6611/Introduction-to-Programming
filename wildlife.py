@@ -9,4 +9,3 @@ def search_species(city):
 
 def filter_venomous(species_list):
     return [species for species in species_list if species["Species"]["PestStatus"] == "Venomous"]
-
