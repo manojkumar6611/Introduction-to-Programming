@@ -1,11 +1,5 @@
-##def display_menu():
-    
-    ##print("Help")
-    ##print("====")
-    ##print("The following commands are recognized:")
-    ##print("a. Display help")
-    ##print("b. Exit the program")
-##display_menu()
+import requests
+
 def display_menu():
     """Display the help menu."""
     print("Welcome to the Wildlife Tracker!")
@@ -13,134 +7,23 @@ def display_menu():
     print("  help - Display this help menu")
     print("  exit - Exit the program")
     print("  list - List all available species")
-    print("  search <species_name> - Search for a specific species")
-    print("  locate <city> - Get GPS coordinates for a city")
-    print("  sightings <species_name> - List sightings of a specific species")
-    print("  nearest <city> - Find the nearest wildlife sighting to a city")
-    print("  report - Report a new wildlife sighting")
-display_menu()
-
-def main():
-    while True:
-        user_input = input("wildlife> ")
+    print("  sightings - display animal sightings in a city")
+    print("  venomous - display venomous species")
     
-        if user_input == "help":
-            display_menu()
-        elif user_input == "exit":
-            print("Exiting the program...")
-            break
-        else:
-            print("Invalid command. Type 'help' for assistance.")
 
-main()
 def search_species(city):
- # Stub function: return a list of species
- return [
- {"Species": {"AcceptedCommonName": "dolphin", "PestStatus": "Nil"}},
- {"Species": {"AcceptedCommonName": "snake", "PestStatus": "Venomous"}}
- ]
+    # Dummy data for demonstration purposes
+    return [
+        {"Species": {"AcceptedCommonName": "dolphin", "PestStatus": "Nil"}},
+        {"Species": {"AcceptedCommonName": "snake", "PestStatus": "Venomous"}}
+    ]
+
 def display_species(species_list):
- # Print the list of species
- for species in species_list:
-    print(species["Species"]["AcceptedCommonName"])
-# Test the functions
-city = "Cairns"
-species_list = search_species(city)
-display_species(species_list)
-def search_sightings(taxonid, city):
- # Stub function: return a list of animal sightings
- return [{"properties": {"StartDate": "1999-11-15", "LocalityDetails": "Tinaroo"}}]
-def display_sightings(sightings):
- # Print the list of sightings
- for sighting in sightings:
-    print("Date:", sighting["properties"]["StartDate"])
-    print("Location:", sighting["properties"]["LocalityDetails"])
-# Test the functions
-taxonid = 1039
-city = "Cairns"
-sightings = search_sightings(taxonid, city)
-display_sightings(sightings)
-def filter_venomous(species_list):
-    # Filter and return only venomous species
-    venomous_species = []
+    # Print the list of species
     for species in species_list:
-        if species["Species"]["PestStatus"] == "Venomous":
-            venomous_species.append(species)
-    return venomous_species
-
-# Test the function
-species_list = [
-    {"Species": {"AcceptedCommonName": "dolphin", "PestStatus": "Nil"}},
-    {"Species": {"AcceptedCommonName": "snake", "PestStatus": "Venomous"}}
-]
-venomous_species = filter_venomous(species_list)
-print(venomous_species)
-def gps(city):
- # Stub function: return Brisbane's GPS coordinates
- return {"latitude": -27.4689682, "longitude": 153.0234991}
-# Test the function
-city = "Cairns"
-coordinates = gps(city)
-print("GPS coordinates for", city + ":", coordinates)
-import requests
-
-def gps_coordinate(city):
-    url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json"
-    response = requests.get(url)
-    data = response.json()
-    if data:
-        return {"latitude": float(data[0]["lat"]), "longitude": float(data[0]["lon"])}
-
-# Test the function
-city = "Cairns"
-coordinates = gps_coordinate(city)
-print("GPS coordinates for", city + ":", coordinates)
-import requests
-
-def get_species_list(coordinate, radius):
-    url = f"https://apps.des.qld.gov.au/species/?op=getspecieslist&kingdom=animals&circle={coordinate['latitude']},{coordinate['longitude']},{radius}"
-    response = requests.get(url)
-    data = response.json()
-    if "SpeciesSightingSummariesContainer" in data:
-        return data["SpeciesSightingSummariesContainer"]["SpeciesSightingSummary"]
-
-# Test the function
-coordinate = {"latitude": -27.4689682, "longitude": 153.0234991}
-radius = 100000
-species_list = get_species_list(coordinate, radius)
-print("Species List:", species_list)
-import requests
-import time
-
-def gps_coordinate(city):
-    url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json"
-    
-    for _ in range(3):  # Retry up to 3 times
-        response = requests.get(url)
-        if response.status_code == 200:
-            try:
-                data = response.json()
-                if data:
-                    return {"latitude": float(data[0]["lat"]), "longitude": float(data[0]["lon"])}
-                else:
-                    print("Error: Empty response from API")
-            except json.decoder.JSONDecodeError:
-                print("Error: Unable to decode JSON response")
-        else:
-            print("Error: API request failed with status code", response.status_code)
-        
-        # Wait before retrying
-        time.sleep(2)
-    
-    print("Error: Maximum retries exceeded")
-    return None
-
-# Test the function
-city = "Cairns"
-coordinates = gps_coordinate(city)
-print("GPS coordinates for", city + ":", coordinates)
-
-import requests
+        print(species["Species"]["AcceptedCommonName"])
+        # sightings=search_sightings(taxonid,city)
+        # display_sightigs(sightings)
 
 def get_surveys_by_species(coordinate, radius, taxonid):
     url = f"https://apps.des.qld.gov.au/species/?op=getsurveysbyspecies&taxonid={taxonid}&circle={coordinate['latitude']},{coordinate['longitude']},{radius}"
@@ -149,35 +32,115 @@ def get_surveys_by_species(coordinate, radius, taxonid):
     if "features" in data:
         return data["features"]
 
-# Test the function
-coordinate = {"latitude": -27.4689682, "longitude": 153.0234991}
-radius = 100000
-taxonid = 1039
-surveys = get_surveys_by_species(coordinate, radius, taxonid)
-print("Surveys:", surveys)
-# Define sightings data
-sightings = [
-    {"properties": {"StartDate": "2022-05-10", "LocalityDetails": "Location A"}},
-    {"properties": {"StartDate": "2022-04-15", "LocalityDetails": "Location B"}},
-    {"properties": {"StartDate": "2022-06-20", "LocalityDetails": "Location C"}}
-]
+def gps_coordinate(city):
+    url = f"https://nominatim.openstreetmap.org/search?q={city}&format=json"
+    response = requests.get(url)
+    data = response.json()
+    if data:
+        return {"latitude": float(data[0]["lat"]), "longitude": float(data[0]["lon"])}
+    return None
+
+def search_sightings(taxonid, city):
+    # Stub function: return a list of animal sightings
+    return [{"properties": {"StartDate": "1999-11-15", "LocalityDetails": "Tinaroo"}}]
+
+def filter_venomous(species_list):
+    return [{"Species": {"AcceptedCommonName": "snake", "PestStatus": "Venomous"}}]
+
+def display_venomous(species_list):
+    for species in species_list:
+        print(species["Species"]["AcceptedCommonName"], species["Species"]["PestStatus"])
+
+def sort_by_date(sightings):
+    """Returns sightings sorted by date."""
+    return sorted(sightings, key=lambda x: x["properties"]["StartDate"])
+
+def display_sightings(sightings):
+    """Prints a list of animal sightings to the screen."""
+    sorted_sightings = sort_by_date(sightings)
+    for sighting in sorted_sightings:
+        print(f"Start Date: {sighting['properties']['StartDate']}, Locality Details: {sighting['properties']['LocalityDetails']}")
+
 def earliest(sightings):
-    # Initialize earliest sighting with a placeholder value
+    """Returns the sighting with the minimum start date."""
     earliest_sighting = None
-    
-    # Iterate through the sightings to find the earliest sighting
     for sighting in sightings:
-        start_date = sighting["properties"]["StartDate"]
-        if earliest_sighting is None or start_date < earliest_sighting:
-            earliest_sighting = start_date
-    
+        if earliest_sighting is None or sighting["properties"]["StartDate"] < earliest_sighting["properties"]["StartDate"]:
+            earliest_sighting = sighting
     return earliest_sighting
 
+def main():
+    display_menu()  # Show the menu at the start
+    while True:
+        user_input = input("wildlife> ").split()
 
-# Call earliest function
-earliest_sighting = earliest(sightings)
-print("Earliest Sighting:", earliest_sighting)
+        if len(user_input) == 0:
+            continue
 
-# Call display_sightings function
-display_sightings(sightings)
+        command = user_input[0]
+
+        if command == "help":
+            display_menu()
+        elif command == "exit":
+            print("Exiting the program...")
+            break
+        elif command == "list":
+            city = "Cairns"  # Example city for demonstration
+            species_list = search_species(city)
+            display_species(species_list)
+        elif command == "sightings":
+            taxonid = 1039  # Example taxon ID for demonstration
+            city = "Cairns" #Example species name for demonstration
+            sightings = search_sightings(taxonid,city)
+            display_sightings(sightings)
+        elif command == "venomous":
+            city = "Cairns"
+            species_list = search_species(city)
+            filter_venomous(species_list)
+            display_venomous(species_list)
+        elif command == "search":
+            if len(user_input) == 2:
+                species_name = user_input[1]
+                # Call function to search for a specific species
+                # For now, we'll just print the species name for demonstration
+                print(f"Searching for species: {species_name}")
+            else:
+                print("Usage: search <species_name>")
+        elif command == "locate":
+            if len(user_input) == 2:
+                city = user_input[1]
+                coordinates = gps_coordinate(city)
+                if coordinates:
+                    print(f"GPS coordinates for {city}: {coordinates}")
+                else:
+                    print(f"Could not find GPS coordinates for city: {city}")
+            else:
+                print("Usage: locate <city>")
+        elif command == "sightings":
+            if len(user_input) == 2:
+                species_name = user_input[1]
+                # Call function to list sightings of a specific species
+                # For now, we'll just print the species name for demonstration
+                print(f"Listing sightings for species: {species_name}")
+                taxonid = 1039  # Example taxon ID for demonstrationhelp
+                sightings = search_sightings(taxonid, species_name)
+                display_sightings(sightings)
+            else:
+                print("Usage: sightings <species_name>")
+        elif command == "nearest":
+            if len(user_input) == 2:
+                city = user_input[1]
+                # Call function to find the nearest wildlife sighting to a city
+                # For now, we'll just print the city name for demonstration
+                print(f"Finding nearest wildlife sighting to city: {city}")
+            else:
+                print("Usage: nearest <city>")
+        elif command == "report":
+            # Call function to report a new wildlife sighting
+            # For now, we'll just print a message for demonstration
+            print("Reporting a new wildlife sighting")
+        else:
+            print("Invalid command. Type 'help' for assistance.")
+
+main()
 
